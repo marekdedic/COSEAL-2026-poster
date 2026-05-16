@@ -6,12 +6,11 @@
 %\usepackage[backend = biber, style = iso-authoryear, sortlocale = en_US, autolang = other, bibencoding = UTF8]{biblatex}
 \usepackage{datetime}
 \usepackage{adjustbox}
-%\usepackage[utf8]{inputenc}
 \usepackage{fontspec}
 \usepackage{mathrsfs}
 \usepackage{microtype}
-\usepackage{listings}
 \usepackage{booktabs}
+\usepackage{bm}
 
 \setdefaultlanguage{english}
 \setmainfont{TeX Gyre Termes}
@@ -20,26 +19,10 @@
 
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usetikzlibrary{arrows,automata,shapes,calc, patterns, backgrounds}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows,automata,shapes,calc,patterns,backgrounds,arrows.meta}
 
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
-\definecolor{mauve}{rgb}{0.58,0,0.82}
-\lstset{basicstyle={\small\ttfamily},
-	belowskip=3mm,
-	breakatwhitespace=true,
-	breaklines=true,
-	classoffset=0,
-	columns=flexible,
-	framexleftmargin=0.25em,
-	frameshape={}{}{}{}, %To remove to vertical lines on left, set `frameshape={}{}{}{}`
-	keywordstyle=\color{blue},
-	numbers=none, %If you want line numbers, set `numbers=left`
-	numberstyle=\color{gray},
-	showstringspaces=false,
-	stringstyle=\color{mauve},
-	tabsize=3,
-	xleftmargin =1em
-}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \def\mathdefault#1{#1}
@@ -60,18 +43,13 @@
 	\href{mailto:marek@dedic.eu}{marek@dedic.eu}
 }
 
-% \logoright{\includegraphics[height=7cm]{logo1.pdf}}
-% \logoleft{\includegraphics[height=7cm]{logo2.pdf}}
-
-% If you have N columns, choose \sepwidth and \colwidth such that
-% (N+1)*\sepwidth + N*\colwidth = \paperwidth
+% 2 columns: 2*colwidth + 3*sepwidth = paperwidth
 \newlength{\sepwidth}
 \newlength{\colwidth}
 \setlength{\sepwidth}{0.033\paperwidth}
 \setlength{\colwidth}{0.45\paperwidth}
 \newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
 
-\newcommand{\corr}{(\Letter)}
 \newcommand{\name}[1]{\textit{#1}}
 \newcommand{\mathfield}{\ensuremath{\mathbb}}
 \newcommand{\mathmat}{\ensuremath{\mathbf}}
@@ -86,32 +64,121 @@
 	\separatorcolumn
 
 	\begin{column}{\colwidth}
-		\begin{alertblock}{3 main projects}
+
+		\begin{block}{Motivation \& Experiment Setup}
 			\begin{itemize}
-				\item A HARP-based method for solving performance-complexity trade-off in GNNs via adaptive prolongation.
-				\item CSP is a very simple learning method for classification and retrieval on graphs, hyper-graphs or problems described by one-hot features. It achieves comparable performance to reference methods in multiple problems, while being significantly cheaper to compute.
-				\item A hyper-parameter optimizer benchmark for GNNs and a novel Cross-RF transfer metalearning method that outperforms SMBOs.
+				\item GNNs are highly sensitive to hyperparameter choices (learning rate, layers, aggregation, dropout, \ldots)
+				\item No systematic benchmark of HPO methods for GNNs existed
+				\item We evaluate \textbf{5 HPO methods} on \textbf{9 graph datasets} using GraphSAGE with 8 tunable hyperparameters
 			\end{itemize}
+			\vspace{0.5em}
+			\adjustbox{width=\columnwidth}{%
+				\includegraphics{images/HPO-loop.pdf}%
+			}
+			\vspace{0.3em}
+			\begin{center}
+				\small
+				\begin{tabular}{lll}
+					\toprule
+					\textbf{HPO Methods} & \textbf{Datasets} & \textbf{Model} \\
+					\midrule
+					Grid Search & Cora, CiteSeer, Squirrel & GraphSAGE \\
+					Random Search & PubMed, CoraFull, DBLP & 8 hyperparameters \\
+					Bayesian Opt.\ (BO) & Computers, Flickr & 10 iterations \\
+					Sobol QMC & OGB ArXiv & early stopping \\
+					TPE & & \\
+					\bottomrule
+				\end{tabular}
+			\end{center}
+		\end{block}
+
+		\begin{alertblock}{Cross-RF Transfer Learning}
+			\begin{itemize}
+				\item Extract graph properties $\delta(\mathcal{D})$ (structure, homophily, attributes, \ldots)
+				\item Train a Random Forest metamodel $\mathcal{M}_\rho$ on past HPO runs across multiple datasets
+				\item For a new dataset, predict the best hyperparameter configuration directly:
+			\end{itemize}
+			\begin{equation*}
+				\tau\!\left(\mathcal{D}\right) = \argmax_{\lambda \in \tilde{\Lambda}}\; \mathcal{M}_\rho\!\left(\delta\!\left(\mathcal{D}\right),\, \lambda\right)
+			\end{equation*}
+			\vspace{0.2em}
+			\begin{center}
+				\input{images/cross-rf-concept/cross-rf-concept.tex}
+			\end{center}
+			\vspace{0.3em}
+			\begin{center}
+				\small
+				\begin{tabular}{lc}
+					\toprule
+					\textbf{Method} & \textbf{Average rank} \\
+					\midrule
+					\textbf{Cross-RF} & \textbf{1.78} \\
+					Bayesian Opt.\ (BO) & 2.00 \\
+					TPE & 2.22 \\
+					\bottomrule
+				\end{tabular}
+			\end{center}
 		\end{alertblock}
+
 	\end{column}
 
 	\separatorcolumn
 
 	\begin{column}{\colwidth}
-		\begin{block}{Hyperparameter optimization for GNNs}
-			We benchmarked 5 standard HPO methods on 9 GNN datasets. The results show that Bayesian optimization (BO) and Tree-structured Parzen Estimators (TPE) achieve the best performance, while Quasi Monte-Carlo (QMC) falls behind.
+
+		\begin{alertblock}{Key Takeaways}
+			\begin{itemize}
+				\item \textbf{SMBO is the go-to for GNN HPO}: BO and TPE consistently win; random search is a strong budget option; Sobol QMC disappoints despite theoretical appeal
+				\item \textbf{Graph properties predict good hyperparameters}: Cross-RF uses dataset characteristics (homophily, structure, attributes) to warm-start HPO with zero evaluations on the new dataset
+				\item \textbf{Transfer learning pays off}: Cross-RF achieves average rank 1.78, outperforming BO (2.00) and TPE (2.22) across 9 diverse graph datasets
+			\end{itemize}
+		\end{alertblock}
+
+		\begin{block}{Benchmark Results}
 			\adjustbox{width=\columnwidth}{%
-				\input{images/benchmark_ranks/benchmark_ranks.pgf}
+				\input{images/benchmark_ranks/benchmark_ranks.pgf}%
 			}
+			\vspace{0.2em}
+			\begin{center}
+				\small SMBO methods (BO \& TPE) consistently outperform Grid, Random, and QMC search.
+			\end{center}
 		\end{block}
 
-		\begin{block}{The Cross-RF method for HPO on graphs}
-			We propose a HPO method using a metamodel \( \mathcal{M}_\rho : \mathfield{R}^d \times \boldsymbol\Lambda \to \mathfield{R} \) that takes as input the properties of a graph dataset \( \delta \left( \mathcal{D} \right) \) and a hyperparameter configuration \( \lambda \), and outputs an estimate of a performance metric \( \rho \). This gives us the following HPO procedure:
-			\begin{equation*}
-				\tau \left( \mathcal{D}, \mathscr{F}, \tilde{\Lambda}, \rho \right) = \argmax_{\lambda \in \tilde{\Lambda}} \mathcal{M}_\rho \left( \delta \left( \mathcal{D} \right), \lambda \right)
-			\end{equation*}
-			We show this method to outperform all of the above methods on the 9 graph datasets by a slight margin.
+		\begin{block}{Cross-RF Results}
+			\begin{center}
+			\small
+			\begin{tabular}{lrrr}
+				\toprule
+				\textbf{Dataset} & \textbf{BO} & \textbf{TPE} & \textbf{Cross-RF} \\
+				\midrule
+				Cora      & \textbf{0.8747} & 0.8659          & 0.8727 \\
+				CiteSeer  & 0.7172          & \textbf{0.7236} & 0.7095 \\
+				Squirrel  & 0.3544          & 0.3755          & \textbf{0.3769} \\
+				PubMed    & \textbf{0.8825} & 0.8643          & 0.8807 \\
+				CoraFull  & 0.6450          & \textbf{0.6555} & 0.6426 \\
+				DBLP      & 0.8118          & 0.8085          & \textbf{0.8123} \\
+				Computers & 0.8945          & 0.8047          & \textbf{0.9023} \\
+				Flickr    & 0.1908          & 0.1460          & \textbf{0.1956} \\
+				ArXiv     & 0.3987          & \textbf{0.4098} & 0.4094 \\
+				\midrule
+				Avg.\ rank & 2.00           & 2.22            & \textbf{1.78} \\
+				\bottomrule
+			\end{tabular}
+			\end{center}
 		\end{block}
+
+		\begin{block}{}
+			\begin{columns}[c]
+				\begin{column}{0.65\colwidth}
+					\textbf{Full paper \& code:}\\[0.4em]
+					\href{https://dedic.eu}{dedic.eu}
+				\end{column}
+				\begin{column}{0.3\colwidth}
+					\includegraphics[width=\columnwidth]{images/qr-code.png}
+				\end{column}
+			\end{columns}
+		\end{block}
+
 	\end{column}
 
 	\separatorcolumn

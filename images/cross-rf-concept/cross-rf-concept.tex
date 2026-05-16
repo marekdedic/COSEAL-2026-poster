@@ -1,0 +1,28 @@
+\begin{tikzpicture}[
+	box/.style={draw, rounded corners=4pt, fill=white, minimum width=3.5cm, minimum height=1.0cm, align=center, font=\footnotesize},
+	arrow/.style={->, thick, >=stealth},
+]
+
+% Row 1: training pipeline
+\node[box, fill=blue!10] (train) at (0, 0)
+	{Training data\\[-2pt]$\mathcal{D}_1 \ldots \mathcal{D}_n$};
+\node[box, fill=green!15] (meta) at (9, 0)
+	{Meta-dataset $\mathscr{H}$\\[-4pt]\scriptsize$(\delta(\mathcal{D}_i),\;\lambda,\;\rho)$};
+\node[box, fill=red!10] (rf) at (18, 0)
+	{RF model $\mathcal{M}_\rho$};
+
+% Row 2: inference on new dataset
+\node[box, fill=blue!20] (dnew) at (9, -3.5)
+	{New dataset $\mathcal{D}^*$};
+\node[box, fill=yellow!40] (result) at (18, -3.5)
+	{Best config $\lambda^*$};
+
+% Arrows: training pipeline
+\draw[arrow] (train.east) -- (meta.west);
+\draw[arrow] (meta.east)  -- (rf.west);
+
+% RF predicts for new dataset
+\draw[arrow] (rf.south) -- (result.north);
+\draw[arrow] (dnew.east) -- node[below, font=\scriptsize]{$\delta(\mathcal{D}^*)$} (result.west);
+
+\end{tikzpicture}
