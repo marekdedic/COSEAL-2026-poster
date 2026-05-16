@@ -1,0 +1,218 @@
+\documentclass{beamer}
+
+\usepackage{polyglossia}
+
+\usepackage[orientation = portrait, size = a1, scale = 1.4]{beamerposter}
+%\usepackage[backend = biber, style = iso-authoryear, sortlocale = en_US, autolang = other, bibencoding = UTF8]{biblatex}
+\usepackage{datetime}
+\usepackage{adjustbox}
+%\usepackage[utf8]{inputenc}
+\usepackage{fontspec}
+\usepackage{mathrsfs}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{booktabs}
+
+\setdefaultlanguage{english}
+\setmainfont{TeX Gyre Termes}
+\usetheme{gemini}
+\usecolortheme{mit}
+
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,automata,shapes,calc, patterns, backgrounds}
+
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstset{basicstyle={\small\ttfamily},
+	belowskip=3mm,
+	breakatwhitespace=true,
+	breaklines=true,
+	classoffset=0,
+	columns=flexible,
+	framexleftmargin=0.25em,
+	frameshape={}{}{}{}, %To remove to vertical lines on left, set `frameshape={}{}{}{}`
+	keywordstyle=\color{blue},
+	numbers=none, %If you want line numbers, set `numbers=left`
+	numberstyle=\color{gray},
+	showstringspaces=false,
+	stringstyle=\color{mauve},
+	tabsize=3,
+	xleftmargin =1em
+}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\def\mathdefault#1{#1}
+
+\title{Representation learning for structured data}
+
+\author{%
+	Marek Dědič\inst{1 2}
+}
+\institute{%
+	\inst{1} Czech Technical University in Prague \samelineand
+	\inst{2} Cisco Systems, Inc.
+}
+
+\footercontent{%
+	DC @ ECAI 2025, Bologna, Italy \hfill
+	\href{mailto:marek@dedic.eu}{marek@dedic.eu}
+}
+
+% \logoright{\includegraphics[height=7cm]{logo1.pdf}}
+% \logoleft{\includegraphics[height=7cm]{logo2.pdf}}
+
+% If you have N columns, choose \sepwidth and \colwidth such that
+% (N+1)*\sepwidth + N*\colwidth = \paperwidth
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.033\paperwidth}
+\setlength{\colwidth}{0.45\paperwidth}
+\newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
+
+\newcommand{\corr}{(\Letter)}
+\newcommand{\name}[1]{\textit{#1}}
+\newcommand{\mathfield}{\ensuremath{\mathbb}}
+\newcommand{\mathmat}{\ensuremath{\mathbf}}
+\newcommand{\mathset}{\ensuremath{\mathbb}}
+\newcommand{\mathspace}{\ensuremath{\mathcal}}
+\newcommand{\mathvec}{\ensuremath{\bm}}
+
+\newcommand{\method}{CSP}
+\newcommand{\methodlong}{Convolutional Signal Propagation}
+\newcommand{\U}{V} % set of nodes in hypergraph
+\newcommand{\uu}{v} % node in hypergraph
+\newcommand{\V}{E} % set of hyperedges in hypergraph
+\newcommand{\vv}{e} % hyperedge in hypergraph
+\newcommand{\HG}{\mathcal{H}} % hypergraph
+\newcommand{\HH}{\mathmat{H}} % incidence matrix
+\newcommand{\BG}{\mathcal{G}_\mathrm{bip}} % bipartite graph
+\newcommand{\E}{E_\mathrm{bip}} % set of edges in bipartite graph
+\newcommand{\D}{\mathmat{D}_v} % node degree matrix
+\newcommand{\B}{\mathmat{D}_e} % hyperedge degree matrix
+\newcommand{\X}{\mathmat{X}} % feature matrix
+\newcommand{\Y}{\mathmat{Y}} % label matrix
+\newcommand{\y}{y} % label
+\newcommand{\x}{\mathvec{x}} % feature vector
+\newcommand{\Tr}{V_\mathrm{train}} % Training set
+\newcommand{\vdeg}{\mathrm{d}} % degree of node or edge
+\newcommand{\edeg}{\delta} % degree of node or edge
+
+\begin{document}
+\begin{frame}[fragile,t]
+
+\begin{columns}[t]
+	\separatorcolumn
+
+	\begin{column}{\colwidth}
+		\begin{alertblock}{3 main projects}
+			\begin{itemize}
+				\item A HARP-based method for solving performance-complexity trade-off in GNNs via adaptive prolongation.
+				\item CSP is a very simple learning method for classification and retrieval on graphs, hyper-graphs or problems described by one-hot features. It achieves comparable performance to reference methods in multiple problems, while being significantly cheaper to compute.
+				\item A hyper-parameter optimizer benchmark for GNNs and a novel Cross-RF transfer metalearning method that outperforms SMBOs.
+			\end{itemize}
+		\end{alertblock}
+
+		\begin{block}{The performance-complexity trade-off}
+			Graph neural networks (GNNs) suffer from high computational demands, which may be a prohibitive issue in some applications. We investigate the interplay of graph coarsening and the performance of a downstream task. The main aim of this work is to explore the performance-complexity characteristics in the context of graph learning.
+			\begin{figure}
+				\includegraphics[width=0.7\linewidth]{images/performance-complexity/performance-complexity.pdf}
+			\end{figure}
+		\end{block}
+
+		\begin{block}{HARP pipeline overview}
+			Our work builds on the HARP method for pretraining on coarsened graphs.
+			\begin{figure}
+				\includegraphics[width=0.85\linewidth]{images/harp-overview/harp-overview.pdf}
+			\end{figure}
+		\end{block}
+
+		\begin{block}{Adaptive prolongation}
+			The main contribution of this work is the adaptive prolongation schema. The algorithm works with the pre-coarsened graphs produced by HARP, however, the prolongation steps are decoupled from the coarsening steps.
+			\begin{figure}
+				\includegraphics[width=\linewidth]{images/adaptive-prolongation/adaptive-prolongation.pdf}
+			\end{figure}
+		\end{block}
+
+		\begin{block}{Adaptive prolongation results}
+			\begin{figure}
+				\includegraphics[width=0.7\linewidth]{images/adaptive-coarsening/adaptive-coarsening.pdf}
+			\end{figure}
+		\end{block}
+	\end{column}
+
+	\separatorcolumn
+
+	\begin{column}{\colwidth}
+		\begin{block}{Convolutional Signal Propagation (CSP)}
+			\begin{center}
+				\adjustbox{width=0.8\columnwidth}{%
+					\input{images/csp_algorithm_poster}
+				}
+			\end{center}
+			\begin{equation*}
+				\hspace*{-1.5cm}
+				x_k^{(l+1)} = \underbrace{%
+					\frac{1}{deg\left( \uu_k \right)}\sum_{\substack{j \\ \uu_k \in \vv_j}}
+				}_{\mathrm{2nd~step}} \
+				\underbrace{%
+					\frac{1}{deg \left( \vv_j \right)}\sum_{\substack{i \\ \uu_i \in \vv_j}} x_i^{(l)}
+				}_{\mathrm{1st~step}},\quad
+				\mathmat{X}^{(l+1)} = \underbrace{\D^{-1} \HH}_{\mathrm{2nd~step}} \ \underbrace{\B^{-1} \HH^T \mathmat{X}^{(l)}}_{\mathrm{1st~step}}
+			\end{equation*}
+		\end{block}
+
+		\begin{block}{CSP Retrieval Results -- P@{}100, exectution time in \(\mu s \)}
+			\adjustbox{width=\columnwidth}{%
+				\begin{tabular}{lrrrrrrrr}
+					\textbf{Method} & \textbf{CiteSeer} & \textbf{Cora-CA} & \textbf{Cora-CC} & \textbf{DBLP} & \textbf{PubMed} & \textbf{Corona} &\textbf{movie-RA} & \textbf{movie-TA} \\
+					\midrule
+					\textbf{\method{} 1-layer} & 0.494 & \underline{0.703} & 0.530 & 0.869 & 0.798 & \textbf{0.530} & 0.334 & 0.156 \\
+					\textbf{\method{} 2-layer} & \underline{0.558} & \underline{0.718} & \underline{0.681} & 0.865 & \underline{0.826} & 0.440 & 0.336 & 0.186 \\
+					\textbf{\method{} 3-layer} & \textbf{0.568} & \textbf{0.721} & \textbf{0.707} & 0.869 & \underline{0.850} & 0.332 & 0.238 & 0.186 \\
+					\textbf{Naive Bayes} & 0.471 & \underline{0.686} & 0.491 & \textbf{0.951} & \underline{0.860} & 0.446 & 0.216 & 0.153 \\
+					\textbf{HGCN-NMF} & 0.482 & \underline{0.671} & 0.607 & 0.794 & \textbf{0.871} & 0.392 & 0.257 & 0.148 \\
+					\textbf{LR-NMF} & 0.329 & 0.603 & 0.372 & 0.602 & 0.735 & 0.397 & \textbf{0.580} & \textbf{0.356} \\
+					\textbf{RF-NMF} & 0.303 & 0.474 & 0.482 & 0.843 & 0.794 & 0.381 & 0.470 & 0.131 \\
+					\textbf{Random} & 0.153 & 0.132 & 0.129 & 0.155 & 0.308 & 0.180 & 0.040 & 0.055 \\
+					\bottomrule
+				\end{tabular}
+			}
+
+			\adjustbox{width=\columnwidth}{%
+				\begin{tabular}{lrrrrrrrr}
+					\textbf{Method} & \textbf{CiteSeer} & \textbf{Cora-CA} & \textbf{Cora-CC} & \textbf{DBLP} & \textbf{PubMed} & \textbf{Corona} & \textbf{movie-RA} & \textbf{movie-TA} \\
+					\midrule
+					\textbf{\method{} 1-layer} & \textbf{1.35} & \textbf{1.23} & \textbf{1.24} & \textbf{3.51} & \textbf{4.01} & \textbf{22.83} & 170.63 & \textbf{12.07} \\
+					\textbf{\method{} 2-layer} & 2.41 & 2.25 & 2.24 & 7.46 & 7.35 & 47.39 & 349.67 & 25.88 \\
+					\textbf{\method{} 3-layer} & 3.31 & 3.09 & 3.08 & 9.65 & 9.1 & 70.98 & 506.1 & 35.75 \\
+					\textbf{Naive Bayes} & 2.59 & 2.73 & 2.54 & 11.16 & 5.35 & 89.3 & 1 051.53 & 35.61 \\
+					\textbf{*HGCN-NMF} & 23 714 & 23 690 & 23 709 & 29 123 & 23 879 & 112 314 & 620 717 & 70 778 \\
+					\textbf{*LR-NMF} & 44.45 & 51.59 & 49.54 & 64.96 & 44.69 & 56 & \textbf{61.82} & 74.07 \\
+					\textbf{*RF-NMF} & 140.76 & 143.85 & 134.52 & 1 148.83 & 323.6 & 1 608.58 & 697.85 & 716.68 \\
+					\bottomrule
+				\end{tabular}
+			}
+		\end{block}
+
+		\begin{block}{Hyperparameter optimization for GNNs}
+			We benchmarked 5 standard HPO methods on 9 GNN datasets. The results show that Bayesian optimization (BO) and Tree-structured Parzen Estimators (TPE) achieve the best performance, while Quasi Monte-Carlo (QMC) falls behind.
+			\adjustbox{width=\columnwidth}{%
+				\input{images/benchmark_ranks/benchmark_ranks.pgf}
+			}
+		\end{block}
+
+		\begin{block}{The Cross-RF method for HPO on graphs}
+			We propose a HPO method using a metamodel \( \mathcal{M}_\rho : \mathfield{R}^d \times \boldsymbol\Lambda \to \mathfield{R} \) that takes as input the properties of a graph dataset \( \delta \left( \mathcal{D} \right) \) and a hyperparameter configuration \( \lambda \), and outputs an estimate of a performance metric \( \rho \). This gives us the following HPO procedure:
+			\begin{equation*}
+				\tau \left( \mathcal{D}, \mathscr{F}, \tilde{\Lambda}, \rho \right) = \argmax_{\lambda \in \tilde{\Lambda}} \mathcal{M}_\rho \left( \delta \left( \mathcal{D} \right), \lambda \right)
+			\end{equation*}
+			We show this method to outperform all of the above methods on the 9 graph datasets by a slight margin.
+		\end{block}
+	\end{column}
+
+	\separatorcolumn
+\end{columns}
+
+\end{frame}
+\end{document}
