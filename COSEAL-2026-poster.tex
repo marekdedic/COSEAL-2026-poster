@@ -69,18 +69,11 @@
 
 		\begin{block}{Motivation \& Experiment Setup}
 			\begin{itemize}
-				\item GNNs are highly sensitive to hyperparameter choices (learning rate, layers, aggregation, dropout, \ldots)
+				\item GNNs are highly sensitive to hyperparameter choices
 				\item No systematic benchmark of HPO methods for GNNs existed
 				\item We evaluate \textbf{5 HPO methods} on \textbf{9 graph datasets} using GraphSAGE with 8 tunable hyperparameters
 			\end{itemize}
-			\vspace{0.5em}
 			\adjustbox{width=\columnwidth}{%
-				\includegraphics{images/HPO-loop.pdf}%
-			}
-			\begin{center}Hyperparameter optimization visualized -- figure by \cite{bischl_hyperparameter_2023}.\end{center}
-			\vspace{0.3em}
-			\begin{center}
-				\small
 				\begin{tabular}{lll}
 					\toprule
 					\textbf{HPO Methods} & \textbf{Datasets} & \textbf{Model} \\
@@ -92,7 +85,25 @@
 					TPE & & \\
 					\bottomrule
 				\end{tabular}
-			\end{center}
+			}
+		\end{block}
+
+		\begin{block}{HPO formalisation}
+			Formally, a HPO method \( \tau \) is a function that proposes a hyperparameter configuration \( \hat{\lambda} \) to try next:
+			\[
+				\hat{\lambda} = \tau \left( \mathcal{D}, \mathscr{F}, \tilde{\Lambda}, \rho \right)
+			\]
+			given
+			\begin{itemize}
+				\item \( \mathcal{D} \): dataset
+				\item \( \mathscr{F} \): learning algorithm
+				\item \( \tilde{\Lambda} \): search space
+				\item \( \rho \): performance metric
+			\end{itemize}
+			\adjustbox{width=\columnwidth}{%
+				\includegraphics{images/HPO-loop.pdf}%
+			}
+			\begin{center}Hyperparameter optimization visualized -- figure by \cite{bischl_hyperparameter_2023}.\end{center}
 		\end{block}
 
 		\begin{block}{Cross-RF Transfer Learning}
