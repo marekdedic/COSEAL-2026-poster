@@ -131,13 +131,7 @@
 			\[
 				\hat{\lambda} = \tau \left( \mathcal{D}, \mathscr{F}, \tilde{\Lambda}, \rho \right)
 			\]
-			given
-			\begin{itemize}
-				\item \( \mathcal{D} \): dataset
-				\item \( \mathscr{F} \): learning algorithm
-				\item \( \tilde{\Lambda} \): search space
-				\item \( \rho \): performance metric
-			\end{itemize}
+			given a dataset \( \mathcal{D} \), a learning algorithm \( \mathscr{F} \), a search space \( \tilde{\Lambda} \) of hyperparameter configurations, and a performance metric \( \rho \) to optimize.
 			%\adjustbox{width=\columnwidth}{%
 			%	\includegraphics{images/HPO-loop.pdf}%
 			%}
@@ -165,7 +159,7 @@
 				\item For a new dataset, predict the best hyperparameter configuration directly:
 			\end{itemize}
 			\begin{equation*}
-				\tau\!\left(\mathcal{D}\right) = \argmax_{\lambda \in \tilde{\Lambda}}\; \mathcal{M}_\rho\!\left(\delta\!\left(\mathcal{D}\right),\, \lambda\right)
+				\tau \left( \mathcal{D}, \mathscr{F}, \tilde{\Lambda}, \rho \right) = \argmax_{\lambda \in \tilde{\Lambda}} \mathcal{M}_\rho \left( \delta \left( \mathcal{D} \right), \lambda \right)
 			\end{equation*}
 			\vspace{0.2em}
 			\begin{center}
