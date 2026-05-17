@@ -78,10 +78,10 @@
 					\toprule
 					\textbf{HPO Methods} & \textbf{Datasets} & \textbf{Model} \\
 					\midrule
-					Grid Search & Cora, CiteSeer, Squirrel & GraphSAGE \\
-					Random Search & PubMed, CoraFull, DBLP & 8 hyperparameters \\
-					Bayesian Opt.\ (BO) & Computers, Flickr & 10 iterations \\
-					Sobol QMC & OGB ArXiv & early stopping \\
+					Grid Search, & Cora, CiteSeer, Squirrel, & GraphSAGE w/ \\
+					Random Search, & PubMed, CoraFull, DBLP, & 8 hyperparameters, \\
+					Bayesian Opt.\ (BO), & Computers, Flickr, & 10 evaluations, \\
+					Sobol QMC, & OGB ArXiv & early stopping \\
 					TPE & & \\
 					\bottomrule
 				\end{tabular}
@@ -146,8 +146,8 @@
 
 		\begin{alertblock}{Key Takeaways}
 			\begin{itemize}
-				\item \textbf{SMBO is the go-to for GNN HPO}: BO and TPE consistently win; random search is a strong budget option; Sobol QMC disappoints despite theoretical appeal
-				\item \textbf{Graph properties predict good hyperparameters}: Cross-RF uses dataset characteristics (homophily, structure, attributes) to warm-start HPO with zero evaluations on the new dataset
+				\item \textbf{SMBO is the go-to for GNN HPO}: BO and TPE consistently win; random search is a strong baseline; Sobol QMC disappoints despite theoretical appeal
+				\item \textbf{Graph properties predict good hyperparameters}: Cross-RF uses dataset characteristics (homophily, structure, attribute similarity etc.) to warm-start HPO with zero evaluations on the new dataset
 				\item \textbf{Transfer learning pays off}: Cross-RF achieves average rank 1.78, outperforming BO (2.00) and TPE (2.22) across 9 diverse graph datasets
 			\end{itemize}
 		\end{alertblock}
