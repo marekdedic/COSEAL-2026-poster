@@ -138,25 +138,10 @@
 				\item \( \tilde{\Lambda} \): search space
 				\item \( \rho \): performance metric
 			\end{itemize}
-			\adjustbox{width=\columnwidth}{%
-				\includegraphics{images/HPO-loop.pdf}%
-			}
-			\begin{center}Hyperparameter optimization visualized -- figure by \cite{bischl_hyperparameter_2023}.\end{center}
-		\end{block}
-
-		\begin{block}{Cross-RF Transfer Learning}
-			\begin{itemize}
-				\item Extract graph properties $\delta(\mathcal{D})$ (structure, homophily, attributes, \ldots)
-				\item Train a Random Forest metamodel $\mathcal{M}_\rho$ on past HPO runs across multiple datasets
-				\item For a new dataset, predict the best hyperparameter configuration directly:
-			\end{itemize}
-			\begin{equation*}
-				\tau\!\left(\mathcal{D}\right) = \argmax_{\lambda \in \tilde{\Lambda}}\; \mathcal{M}_\rho\!\left(\delta\!\left(\mathcal{D}\right),\, \lambda\right)
-			\end{equation*}
-			\vspace{0.2em}
-			\begin{center}
-				\input{images/cross-rf-concept/cross-rf-concept.tex}
-			\end{center}
+			%\adjustbox{width=\columnwidth}{%
+			%	\includegraphics{images/HPO-loop.pdf}%
+			%}
+			%\begin{center}Hyperparameter optimization visualized -- figure by \cite{bischl_hyperparameter_2023}.\end{center}
 		\end{block}
 
 	\end{column}
@@ -172,6 +157,21 @@
 				\item \textbf{Transfer learning pays off}: Cross-RF achieves average rank 1.78, outperforming BO (2.00) and TPE (2.22) across 9 diverse graph datasets
 			\end{itemize}
 		\end{alertblock}
+
+		\begin{block}{Cross-RF Transfer Learning}
+			\begin{itemize}
+				\item Extract graph properties $\delta(\mathcal{D})$ (structure, homophily, attributes, \ldots)
+				\item Train a Random Forest metamodel $\mathcal{M}_\rho$ on past HPO runs across multiple datasets
+				\item For a new dataset, predict the best hyperparameter configuration directly:
+			\end{itemize}
+			\begin{equation*}
+				\tau\!\left(\mathcal{D}\right) = \argmax_{\lambda \in \tilde{\Lambda}}\; \mathcal{M}_\rho\!\left(\delta\!\left(\mathcal{D}\right),\, \lambda\right)
+			\end{equation*}
+			\vspace{0.2em}
+			\begin{center}
+				\input{images/cross-rf-concept/cross-rf-concept.tex}
+			\end{center}
+		\end{block}
 
 		\begin{block}{Cross-RF Results}
 			\begin{center}
